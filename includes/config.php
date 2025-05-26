@@ -4,7 +4,7 @@
  */
 
 // Configurações do banco de dados
-define('DB_HOST', 'localhost');
+define('DB_HOST', 'srv1845.hstgr.io');
 define('DB_USER', 'u150266992_admin_karzone');
 define('DB_PASS', 'M@ychel123');
 define('DB_NAME', 'u150266992_karzone');
