@@ -1,0 +1,55 @@
+INSERT INTO u150266992_karzone.models (brand_id,name,status) VALUES
+	 (1,'Civic','active'),
+	 (1,'Fit','active'),
+	 (1,'HR-V','active'),
+	 (1,'City','active'),
+	 (1,'CR-V','active'),
+	 (2,'Corolla','active'),
+	 (2,'Hilux','active'),
+	 (2,'Yaris','active'),
+	 (2,'SW4','active'),
+	 (2,'RAV4','active');
+INSERT INTO u150266992_karzone.models (brand_id,name,status) VALUES
+	 (3,'Gol','active'),
+	 (3,'Polo','active'),
+	 (3,'T-Cross','active'),
+	 (3,'Virtus','active'),
+	 (3,'Nivus','active'),
+	 (4,'Onix','active'),
+	 (4,'Tracker','active'),
+	 (4,'Cruze','active'),
+	 (4,'S10','active'),
+	 (4,'Spin','active');
+INSERT INTO u150266992_karzone.models (brand_id,name,status) VALUES
+	 (5,'Uno','active'),
+	 (5,'Argo','active'),
+	 (5,'Mobi','active'),
+	 (5,'Toro','active'),
+	 (5,'Strada','active'),
+	 (6,'Ka','active'),
+	 (6,'EcoSport','active'),
+	 (6,'Ranger','active'),
+	 (6,'Mustang','active'),
+	 (6,'Territory','active');
+INSERT INTO u150266992_karzone.models (brand_id,name,status) VALUES
+	 (7,'HB20','active'),
+	 (7,'Creta','active'),
+	 (7,'Tucson','active'),
+	 (7,'i30','active'),
+	 (7,'Santa Fe','active'),
+	 (8,'Renegade','active'),
+	 (8,'Compass','active'),
+	 (8,'Commander','active'),
+	 (8,'Wrangler','active'),
+	 (8,'Cherokee','active');
+INSERT INTO u150266992_karzone.models (brand_id,name,status) VALUES
+	 (9,'Versa','active'),
+	 (9,'Kicks','active'),
+	 (9,'Sentra','active'),
+	 (9,'Frontier','active'),
+	 (9,'March','active'),
+	 (10,'Kwid','active'),
+	 (10,'Sandero','active'),
+	 (10,'Logan','active'),
+	 (10,'Duster','active'),
+	 (10,'Captur','active');
