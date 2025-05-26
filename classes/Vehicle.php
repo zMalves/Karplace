@@ -115,72 +115,6 @@ class Vehicle {
         $this->db->bind(':id', $id);
         return $this->db->single();
     }
-    private $db;
-    
-    /**
-     * Construtor - inicializa a conexão com o banco de dados
-     */
-    public function __construct() {
-        $this->db = new Database();
-    }
-    
-    /**
-     * Obtém todas as marcas
-     * @return array Lista de marcas
-     */
-    public function getAllBrands() {
-        $cache_key = 'all_brands';
-        $brands = Cache::get($cache_key);
-        
-        if ($brands === false) {
-            $this->db->query('SELECT * FROM brands WHERE status = "active" ORDER BY name ASC');
-            $brands = $this->db->resultSet();
-            Cache::set($cache_key, $brands, 3600); // Cache por 1 hora
-        }
-        
-        return $brands;
-    }
-    
-    /**
-     * Obtém todos os modelos de uma marca
-     * @param int $brand_id ID da marca
-     * @return array Lista de modelos
-     */
-    public function getModelsByBrand($brand_id) {
-        $cache_key = 'models_brand_' . $brand_id;
-        $models = Cache::get($cache_key);
-        
-        if ($models === false) {
-            $this->db->query('SELECT * FROM models WHERE brand_id = :brand_id AND status = "active" ORDER BY name ASC');
-            $this->db->bind(':brand_id', $brand_id);
-            $models = $this->db->resultSet();
-            Cache::set($cache_key, $models, 3600); // Cache por 1 hora
-        }
-        
-        return $models;
-    }
-    
-    /**
-     * Obtém uma marca pelo ID
-     * @param int $id ID da marca
-     * @return mixed Dados da marca ou false
-     */
-    public function getBrandById($id) {
-        $this->db->query('SELECT * FROM brands WHERE id = :id');
-        $this->db->bind(':id', $id);
-        return $this->db->single();
-    }
-    
-    /**
-     * Obtém um modelo pelo ID
-     * @param int $id ID do modelo
-     * @return mixed Dados do modelo ou false
-     */
-    public function getModelById($id) {
-        $this->db->query('SELECT m.*, b.name as brand_name FROM models m JOIN brands b ON m.brand_id = b.id WHERE m.id = :id');
-        $this->db->bind(':id', $id);
-        return $this->db->single();
-    }
     
     /**
      * Obtém um veículo pelo ID
@@ -253,3 +187,4 @@ class Vehicle {
         return $result;
     }
 }
+?>

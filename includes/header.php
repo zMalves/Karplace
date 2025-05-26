@@ -1,5 +1,28 @@
 <?php
-// Cabeçalho e rodapé comuns para todas as páginas
+// Se ainda não estiver incluído
+if (!defined('HEADER_INCLUDED')) {
+    define('HEADER_INCLUDED', true);
+
+    // Inclui dependências necessárias
+    if (!class_exists('Database')) {
+        require_once __DIR__ . '/../classes/Database.php';
+    }
+    if (!class_exists('Vehicle')) {
+        require_once __DIR__ . '/../classes/Vehicle.php';
+    }
+    if (!class_exists('User')) {
+        require_once __DIR__ . '/../classes/User.php';
+    }
+
+    // Se não estiver logado e tentar acessar área restrita
+    $restricted_pages = ['anunciar.php', 'perfil.php', 'meus-anuncios.php'];
+    $current_page = basename($_SERVER['PHP_SELF']);
+
+    if (in_array($current_page, $restricted_pages) && !isLoggedIn()) {
+        header('Location: login.php');
+        exit;
+    }
+}
 ?>
 <header class="site-header">
     <div class="container">
@@ -10,7 +33,7 @@
                     <img src="logo.png" alt="Logo Karplace">
                 </a>
             </div>
-            
+
             <nav class="main-nav">
                 <ul>
                     <li><a href="index.php">Home</a></li>
@@ -20,7 +43,7 @@
                     <li><a href="sobre.php">Sobre</a></li>
                 </ul>
             </nav>
-            
+
             <div class="user-actions">
                 <?php if (isLoggedIn()): ?>
                     <div class="user-menu">
@@ -47,7 +70,7 @@
                     <a href="registro.php" class="btn btn-primary">Cadastrar</a>
                 <?php endif; ?>
             </div>
-            
+
             <button class="mobile-menu-toggle">
                 <i class="fas fa-bars"></i>
             </button>
