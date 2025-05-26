@@ -11,7 +11,7 @@ class Cache {
      */
     public static function init() {
         if (!file_exists(self::$cache_dir)) {
-            mkdir(self::$cache_dir, 0755, true);
+            @mkdir(self::$cache_dir, 0755, true);
         }
     }
 

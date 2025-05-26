@@ -41,13 +41,14 @@ function debug($data) {
     }
 }
 
-// Incluir classes auxiliares
+// Inicialização da sessão ANTES de qualquer inclusão que possa gerar saída
+session_name(SESSION_NAME);
+session_start();
+
+// Incluir classes auxiliares APÓS a inicialização da sessão
 require_once __DIR__ . '/validation.php';
 require_once __DIR__ . '/logger.php';
 require_once __DIR__ . '/cache.php';
 
-// Inicialização da sessão ANTES de qualquer saída
-session_name(SESSION_NAME); // Deve ser chamado antes de qualquer saída
-session_start(); // Deve ser chamado APÓS a inclusão das classes
-
-Logger::init(); // Inicializa o logger
+// Inicializa o logger sem gerar saída
+Logger::init();

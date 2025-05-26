@@ -1,4 +1,7 @@
 <?php
+// Evita qualquer saída antes da inicialização da sessão
+ob_start();
+
 require_once '../includes/config.php';
 require_once '../includes/functions.php';
 require_once '../classes/Database.php';

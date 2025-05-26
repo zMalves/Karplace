@@ -11,7 +11,7 @@ class Logger {
     public static function init() {
         $log_dir = dirname(self::$log_file);
         if (!file_exists($log_dir)) {
-            mkdir($log_dir, 0755, true);
+            @mkdir($log_dir, 0755, true);
         }
     }
 
