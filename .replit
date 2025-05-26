@@ -1,0 +1,10 @@
+modules = ["php-8.2", "web", "nodejs-20"]
+run = "php -S 0.0.0.0:5000 -t public_html"
+
+[nix]
+channel = "stable-24_05"
+packages = ["run"]
+
+[[ports]]
+localPort = 5000
+externalPort = 80
