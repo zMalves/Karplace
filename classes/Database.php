@@ -1,6 +1,7 @@
+
 <?php
 /**
- * Classe Database para conexão e operações com o banco de dados
+ * Classe Database para gerenciamento de conexão e operações com o banco de dados
  */
 class Database {
     private $host = DB_HOST;
@@ -8,53 +9,49 @@ class Database {
     private $pass = DB_PASS;
     private $dbname = DB_NAME;
     
-    private $conn;
-    private $error;
+    private $dbh;
     private $stmt;
+    private $error;
     
     /**
      * Construtor - estabelece conexão com o banco de dados
      */
     public function __construct() {
-        // Set DSN (Data Source Name)
+        // DSN
         $dsn = 'mysql:host=' . $this->host . ';dbname=' . $this->dbname . ';charset=utf8mb4';
         
-        // Set options
+        // Opções PDO
         $options = array(
             PDO::ATTR_PERSISTENT => true,
             PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
             PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
-            PDO::ATTR_EMULATE_PREPARES => false
+            PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8mb4"
         );
         
-        // Create PDO instance
+        // Criar instância PDO
         try {
-            $this->conn = new PDO($dsn, $this->user, $this->pass, $options);
+            $this->dbh = new PDO($dsn, $this->user, $this->pass, $options);
         } catch(PDOException $e) {
             $this->error = $e->getMessage();
-            Logger::error('Database Connection Error: ' . $this->error);
             if (DEBUG_MODE) {
-                echo 'Database Connection Error: ' . $this->error;
-            } else {
-                echo 'Database Connection Error. Please try again later.';
+                echo 'Database Error: ' . $this->error;
             }
-            exit;
         }
     }
     
     /**
      * Prepara uma query SQL
-     * @param string $sql Query SQL a ser preparada
+     * @param string $sql Query SQL
      */
     public function query($sql) {
-        $this->stmt = $this->conn->prepare($sql);
+        $this->stmt = $this->dbh->prepare($sql);
     }
     
     /**
-     * Vincula um valor a um parâmetro
-     * @param string $param Nome do parâmetro
-     * @param mixed $value Valor a ser vinculado
-     * @param mixed $type Tipo do parâmetro (opcional)
+     * Vincula valores aos parâmetros da query
+     * @param string $param Parâmetro
+     * @param mixed $value Valor
+     * @param mixed $type Tipo do parâmetro
      */
     public function bind($param, $value, $type = null) {
         if (is_null($type)) {
@@ -81,34 +78,25 @@ class Database {
      * @return boolean
      */
     public function execute() {
-        try {
-            return $this->stmt->execute();
-        } catch(PDOException $e) {
-            $this->error = $e->getMessage();
-            Logger::error('Query Error: ' . $this->error, ['query' => $this->stmt->queryString]);
-            if (DEBUG_MODE) {
-                echo 'Query Error: ' . $this->error;
-            }
-            return false;
-        }
+        return $this->stmt->execute();
     }
     
     /**
-     * Retorna um único registro
-     * @return object
-     */
-    public function single() {
-        $this->execute();
-        return $this->stmt->fetch();
-    }
-    
-    /**
-     * Retorna todos os registros
+     * Retorna múltiplos resultados como array
      * @return array
      */
     public function resultSet() {
         $this->execute();
-        return $this->stmt->fetchAll();
+        return $this->stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+    
+    /**
+     * Retorna um único resultado
+     * @return mixed
+     */
+    public function single() {
+        $this->execute();
+        return $this->stmt->fetch(PDO::FETCH_ASSOC);
     }
     
     /**
@@ -124,35 +112,38 @@ class Database {
      * @return int
      */
     public function lastInsertId() {
-        return $this->conn->lastInsertId();
+        return $this->dbh->lastInsertId();
     }
     
     /**
      * Inicia uma transação
+     * @return boolean
      */
     public function beginTransaction() {
-        return $this->conn->beginTransaction();
+        return $this->dbh->beginTransaction();
     }
     
     /**
      * Confirma uma transação
+     * @return boolean
      */
     public function commit() {
-        return $this->conn->commit();
+        return $this->dbh->commit();
     }
     
     /**
      * Reverte uma transação
+     * @return boolean
      */
     public function rollBack() {
-        return $this->conn->rollBack();
+        return $this->dbh->rollBack();
     }
     
     /**
-     * Retorna o erro da última operação
-     * @return string
+     * Debug da última query
      */
-    public function getError() {
-        return $this->error;
+    public function debugDumpParams() {
+        return $this->stmt->debugDumpParams();
     }
 }
+?>

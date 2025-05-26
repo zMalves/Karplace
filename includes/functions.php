@@ -1,79 +1,44 @@
 <?php
 /**
- * Funções utilitárias para o sistema
+ * Funções auxiliares do sistema
  */
-
-/**
- * Redireciona para uma URL
- * @param string $url URL para redirecionamento
- */
-function redirect($url) {
-    header('Location: ' . $url);
-    exit;
-}
 
 /**
  * Verifica se o usuário está logado
  * @return boolean
  */
 function isLoggedIn() {
-    return isset($_SESSION['user_id']);
+    return isset($_SESSION['user_id']) && !empty($_SESSION['user_id']);
 }
 
 /**
- * Verifica se o usuário é um vendedor
- * @return boolean
+ * Obtém o ID do usuário logado
+ * @return int|null
  */
-function isSeller() {
-    return isset($_SESSION['user_type']) && ($_SESSION['user_type'] == 'seller' || $_SESSION['user_type'] == 'admin');
+function getUserId() {
+    return isLoggedIn() ? $_SESSION['user_id'] : null;
 }
 
 /**
- * Verifica se o usuário é um administrador
+ * Verifica se o usuário é administrador
  * @return boolean
  */
 function isAdmin() {
-    return isset($_SESSION['user_type']) && $_SESSION['user_type'] == 'admin';
+    return isLoggedIn() && isset($_SESSION['user_type']) && $_SESSION['user_type'] === 'admin';
 }
 
 /**
- * Requer login para acessar a página
- * @param string $redirect URL para redirecionamento caso não esteja logado
+ * Redireciona para uma página
+ * @param string $url URL de destino
  */
-function requireLogin($redirect = '/login.php') {
-    if (!isLoggedIn()) {
-        $_SESSION['error'] = 'Você precisa estar logado para acessar esta página.';
-        redirect($redirect);
-    }
-}
-
-/**
- * Requer permissão de vendedor para acessar a página
- * @param string $redirect URL para redirecionamento caso não tenha permissão
- */
-function requireSeller($redirect = '/index.php') {
-    requireLogin('/login.php');
-    if (!isSeller()) {
-        $_SESSION['error'] = 'Você precisa ser um vendedor para acessar esta página.';
-        redirect($redirect);
-    }
-}
-
-/**
- * Requer permissão de administrador para acessar a página
- * @param string $redirect URL para redirecionamento caso não tenha permissão
- */
-function requireAdmin($redirect = '/index.php') {
-    requireLogin('/login.php');
-    if (!isAdmin()) {
-        $_SESSION['error'] = 'Você precisa ser um administrador para acessar esta página.';
-        redirect($redirect);
-    }
+function redirect($url) {
+    header("Location: $url");
+    exit();
 }
 
 /**
  * Formata um valor monetário
- * @param float $value Valor a ser formatado
+ * @param float $value Valor
  * @return string Valor formatado
  */
 function formatMoney($value) {
@@ -81,115 +46,90 @@ function formatMoney($value) {
 }
 
 /**
- * Limpa valor monetário para inserção no banco
- * @param string $value Valor formatado
- * @return float Valor limpo
+ * Formata uma data para exibição
+ * @param string $date Data
+ * @return string Data formatada
  */
-function cleanMoney($value) {
-    // Remove R$, espaços, pontos e substitui vírgula por ponto
-    $clean = str_replace(['R$', ' ', '.'], '', $value);
-    $clean = str_replace(',', '.', $clean);
-    return (float) $clean;
+function formatDate($date) {
+    return date('d/m/Y', strtotime($date));
 }
 
 /**
- * Formata uma data
- * @param string $date Data a ser formatada
- * @param string $format Formato desejado
- * @return string Data formatada
+ * Formata uma data/hora para exibição
+ * @param string $datetime Data/hora
+ * @return string Data/hora formatada
  */
-function formatDate($date, $format = 'd/m/Y') {
-    $datetime = new DateTime($date);
-    return $datetime->format($format);
-}
-
-/**
- * Formata uma data com hora
- * @param string $date Data a ser formatada
- * @return string Data formatada
- */
-function formatDateTime($date) {
-    return formatDate($date, 'd/m/Y H:i');
+function formatDateTime($datetime) {
+    return date('d/m/Y H:i', strtotime($datetime));
 }
 
 /**
  * Calcula o tempo decorrido desde uma data
- * @param string $date Data de referência
+ * @param string $datetime Data/hora
  * @return string Tempo decorrido
  */
-function timeAgo($date) {
-    $datetime = new DateTime($date);
-    $now = new DateTime();
-    $interval = $now->diff($datetime);
-    
-    if ($interval->y > 0) {
-        return $interval->y . ' ano' . ($interval->y > 1 ? 's' : '') . ' atrás';
-    } elseif ($interval->m > 0) {
-        return $interval->m . ' mês' . ($interval->m > 1 ? 'es' : '') . ' atrás';
-    } elseif ($interval->d > 0) {
-        return $interval->d . ' dia' . ($interval->d > 1 ? 's' : '') . ' atrás';
-    } elseif ($interval->h > 0) {
-        return $interval->h . ' hora' . ($interval->h > 1 ? 's' : '') . ' atrás';
-    } elseif ($interval->i > 0) {
-        return $interval->i . ' minuto' . ($interval->i > 1 ? 's' : '') . ' atrás';
+function timeAgo($datetime) {
+    $time = time() - strtotime($datetime);
+
+    if ($time < 60) {
+        return 'Agora há pouco';
+    } elseif ($time < 3600) {
+        $minutes = floor($time / 60);
+        return $minutes . ' minuto' . ($minutes > 1 ? 's' : '') . ' atrás';
+    } elseif ($time < 86400) {
+        $hours = floor($time / 3600);
+        return $hours . ' hora' . ($hours > 1 ? 's' : '') . ' atrás';
+    } elseif ($time < 2592000) {
+        $days = floor($time / 86400);
+        return $days . ' dia' . ($days > 1 ? 's' : '') . ' atrás';
+    } elseif ($time < 31536000) {
+        $months = floor($time / 2592000);
+        return $months . ' mês' . ($months > 1 ? 'es' : '') . ' atrás';
     } else {
-        return 'agora mesmo';
+        $years = floor($time / 31536000);
+        return $years . ' ano' . ($years > 1 ? 's' : '') . ' atrás';
     }
 }
 
 /**
- * Limita o tamanho de um texto
- * @param string $text Texto a ser limitado
- * @param int $length Tamanho máximo
- * @param string $append Texto a ser adicionado ao final
- * @return string Texto limitado
- */
-function limitText($text, $length = 100, $append = '...') {
-    if (strlen($text) <= $length) {
-        return $text;
-    }
-    
-    $text = substr($text, 0, $length);
-    $text = substr($text, 0, strrpos($text, ' '));
-    
-    return $text . $append;
-}
-
-/**
- * Gera um slug a partir de um texto
- * @param string $text Texto a ser convertido
- * @return string Slug gerado
- */
-function generateSlug($text) {
-    // Remove acentos
-    $text = iconv('UTF-8', 'ASCII//TRANSLIT', $text);
-    
-    // Converte para minúsculas
-    $text = strtolower($text);
-    
-    // Remove caracteres especiais
-    $text = preg_replace('/[^a-z0-9\s-]/', '', $text);
-    
-    // Substitui espaços por hífens
-    $text = preg_replace('/[\s-]+/', '-', $text);
-    
-    // Remove hífens do início e do fim
-    $text = trim($text, '-');
-    
-    return $text;
-}
-
-/**
- * Sanitiza uma string para uso em HTML
- * @param string $string String a ser sanitizada
+ * Sanitiza uma string para exibição segura
+ * @param string $string String para sanitizar
  * @return string String sanitizada
  */
-function sanitizeHTML($string) {
+function sanitize($string) {
     return htmlspecialchars($string, ENT_QUOTES, 'UTF-8');
 }
 
 /**
- * Exibe uma mensagem flash
+ * Valida um email
+ * @param string $email Email para validar
+ * @return boolean
+ */
+function validateEmail($email) {
+    return filter_var($email, FILTER_VALIDATE_EMAIL);
+}
+
+/**
+ * Gera um hash seguro para senha
+ * @param string $password Senha
+ * @return string Hash da senha
+ */
+function hashPassword($password) {
+    return password_hash($password, PASSWORD_DEFAULT, ['cost' => HASH_COST]);
+}
+
+/**
+ * Verifica se uma senha corresponde ao hash
+ * @param string $password Senha
+ * @param string $hash Hash
+ * @return boolean
+ */
+function verifyPassword($password, $hash) {
+    return password_verify($password, $hash);
+}
+
+/**
+ * Exibe mensagens flash
  * @param string $type Tipo da mensagem (success, error, warning, info)
  * @return string HTML da mensagem
  */
@@ -197,14 +137,14 @@ function flashMessage($type) {
     if (isset($_SESSION[$type])) {
         $message = $_SESSION[$type];
         unset($_SESSION[$type]);
-        return '<div class="alert alert-' . $type . '">' . $message . '</div>';
+        return "<div class=\"alert alert-{$type}\">{$message}</div>";
     }
     return '';
 }
 
 /**
  * Gera um token CSRF
- * @return string Token gerado
+ * @return string Token
  */
 function generateCSRFToken() {
     if (!isset($_SESSION['csrf_token'])) {
@@ -215,186 +155,70 @@ function generateCSRFToken() {
 
 /**
  * Verifica um token CSRF
- * @param string $token Token a ser verificado
+ * @param string $token Token para verificar
  * @return boolean
  */
 function verifyCSRFToken($token) {
-    if (!isset($_SESSION['csrf_token']) || $token !== $_SESSION['csrf_token']) {
-        return false;
-    }
-    return true;
+    return isset($_SESSION['csrf_token']) && hash_equals($_SESSION['csrf_token'], $token);
 }
 
 /**
- * Gera um campo de token CSRF para formulários
- * @return string HTML do campo
+ * Limita o tamanho de uma string
+ * @param string $string String
+ * @param int $length Tamanho máximo
+ * @param string $suffix Sufixo para strings cortadas
+ * @return string String limitada
  */
-function csrfField() {
-    $token = generateCSRFToken();
-    return '<input type="hidden" name="csrf_token" value="' . $token . '">';
+function limitString($string, $length = 100, $suffix = '...') {
+    if (strlen($string) > $length) {
+        return substr($string, 0, $length) . $suffix;
+    }
+    return $string;
 }
 
 /**
- * Verifica se uma requisição é POST
- * @return boolean
+ * Converte uma string para URL amigável (slug)
+ * @param string $string String para converter
+ * @return string Slug
  */
-function isPostRequest() {
-    return $_SERVER['REQUEST_METHOD'] === 'POST';
+function createSlug($string) {
+    $string = strtolower($string);
+    $string = preg_replace('/[^a-z0-9\s-]/', '', $string);
+    $string = preg_replace('/[\s-]+/', '-', $string);
+    return trim($string, '-');
 }
 
 /**
- * Obtém o valor de um parâmetro GET
- * @param string $key Nome do parâmetro
- * @param mixed $default Valor padrão
- * @return mixed Valor do parâmetro
+ * Obtém a extensão de um arquivo
+ * @param string $filename Nome do arquivo
+ * @return string Extensão
  */
-function getParam($key, $default = null) {
-    return isset($_GET[$key]) ? $_GET[$key] : $default;
-}
-
-/**
- * Obtém o valor de um campo POST
- * @param string $key Nome do campo
- * @param mixed $default Valor padrão
- * @return mixed Valor do campo
- */
-function postParam($key, $default = null) {
-    return isset($_POST[$key]) ? $_POST[$key] : $default;
-}
-
-/**
- * Gera links de paginação
- * @param int $page Página atual
- * @param int $total_pages Total de páginas
- * @param string $url_pattern Padrão de URL para links
- * @return string HTML da paginação
- */
-function pagination($page, $total_pages, $url_pattern = '?page=%d') {
-    if ($total_pages <= 1) {
-        return '';
-    }
-    
-    $html = '<div class="pagination">';
-    
-    // Link para página anterior
-    if ($page > 1) {
-        $html .= '<a href="' . sprintf($url_pattern, $page - 1) . '" class="page-link">&laquo; Anterior</a>';
-    } else {
-        $html .= '<span class="page-link disabled">&laquo; Anterior</span>';
-    }
-    
-    // Links para páginas
-    $start = max(1, $page - 2);
-    $end = min($total_pages, $page + 2);
-    
-    if ($start > 1) {
-        $html .= '<a href="' . sprintf($url_pattern, 1) . '" class="page-link">1</a>';
-        if ($start > 2) {
-            $html .= '<span class="page-link dots">...</span>';
-        }
-    }
-    
-    for ($i = $start; $i <= $end; $i++) {
-        if ($i == $page) {
-            $html .= '<span class="page-link active">' . $i . '</span>';
-        } else {
-            $html .= '<a href="' . sprintf($url_pattern, $i) . '" class="page-link">' . $i . '</a>';
-        }
-    }
-    
-    if ($end < $total_pages) {
-        if ($end < $total_pages - 1) {
-            $html .= '<span class="page-link dots">...</span>';
-        }
-        $html .= '<a href="' . sprintf($url_pattern, $total_pages) . '" class="page-link">' . $total_pages . '</a>';
-    }
-    
-    // Link para próxima página
-    if ($page < $total_pages) {
-        $html .= '<a href="' . sprintf($url_pattern, $page + 1) . '" class="page-link">Próxima &raquo;</a>';
-    } else {
-        $html .= '<span class="page-link disabled">Próxima &raquo;</span>';
-    }
-    
-    $html .= '</div>';
-    
-    return $html;
-}
-
-/**
- * Gera um nome de arquivo único para upload
- * @param string $original_name Nome original do arquivo
- * @return string Nome único gerado
- */
-function generateUniqueFilename($original_name) {
-    $extension = pathinfo($original_name, PATHINFO_EXTENSION);
-    return uniqid() . '_' . time() . '.' . $extension;
+function getFileExtension($filename) {
+    return pathinfo($filename, PATHINFO_EXTENSION);
 }
 
 /**
  * Verifica se um arquivo é uma imagem válida
- * @param array $file Dados do arquivo ($_FILES)
+ * @param string $filename Nome do arquivo
  * @return boolean
  */
-function isValidImage($file) {
-    // Verifica se houve erro no upload
-    if ($file['error'] !== UPLOAD_ERR_OK) {
-        return false;
-    }
-    
-    // Verifica o tipo MIME
-    $allowed_types = ['image/jpeg', 'image/png', 'image/gif'];
-    if (!in_array($file['type'], $allowed_types)) {
-        return false;
-    }
-    
-    // Verifica o tamanho (máximo 5MB)
-    if ($file['size'] > 5 * 1024 * 1024) {
-        return false;
-    }
-    
-    // Verifica se é uma imagem válida
-    $image_info = getimagesize($file['tmp_name']);
-    if (!$image_info) {
-        return false;
-    }
-    
-    return true;
+function isValidImage($filename) {
+    $allowed_extensions = ['jpg', 'jpeg', 'png', 'webp'];
+    $extension = strtolower(getFileExtension($filename));
+    return in_array($extension, $allowed_extensions);
 }
 
 /**
- * Faz upload de uma imagem
- * @param array $file Dados do arquivo ($_FILES)
- * @param string $destination Diretório de destino
- * @return mixed Nome do arquivo ou false
+ * Formata o tamanho de um arquivo
+ * @param int $bytes Tamanho em bytes
+ * @return string Tamanho formatado
  */
-function uploadImage($file, $destination) {
-    try {
-        // Verifica se é uma imagem válida
-        if (!isValidImage($file)) {
-            Logger::warning('Upload falhou: imagem inválida', ['file' => $file['name']]);
-            return false;
-        }
-        
-        // Cria o diretório se não existir
-        if (!file_exists($destination)) {
-            mkdir($destination, 0755, true);
-        }
-        
-        // Gera um nome único
-        $filename = generateUniqueFilename($file['name']);
-        $filepath = $destination . '/' . $filename;
-        
-        // Move o arquivo
-        if (move_uploaded_file($file['tmp_name'], $filepath)) {
-            Logger::info('Upload realizado com sucesso', ['file' => $filename]);
-            return $filename;
-        }
-        
-        Logger::error('Falha ao mover arquivo uploadado', ['destination' => $filepath]);
-        return false;
-    } catch (Exception $e) {
-        Logger::exception($e);
-        return false;
+function formatFileSize($bytes) {
+    $units = ['B', 'KB', 'MB', 'GB', 'TB'];
+
+    for ($i = 0; $bytes > 1024 && $i < count($units) - 1; $i++) {
+        $bytes /= 1024;
     }
+
+    return round($bytes, 2) . ' ' . $units[$i];
 }
