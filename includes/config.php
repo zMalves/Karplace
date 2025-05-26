@@ -41,6 +41,14 @@ function debug($data) {
     }
 }
 
+// Incluir classes auxiliares
+require_once __DIR__ . '/validation.php';
+require_once __DIR__ . '/logger.php';
+require_once __DIR__ . '/cache.php';
+
+// Inicializar logger
+Logger::init();
+
 // Inicialização da sessão
 session_name(SESSION_NAME);
 session_start();

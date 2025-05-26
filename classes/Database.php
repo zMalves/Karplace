@@ -32,6 +32,7 @@ class Database {
             $this->conn = new PDO($dsn, $this->user, $this->pass, $options);
         } catch(PDOException $e) {
             $this->error = $e->getMessage();
+            Logger::error('Database Connection Error: ' . $this->error);
             if (DEBUG_MODE) {
                 echo 'Database Connection Error: ' . $this->error;
             } else {
@@ -84,6 +85,7 @@ class Database {
             return $this->stmt->execute();
         } catch(PDOException $e) {
             $this->error = $e->getMessage();
+            Logger::error('Query Error: ' . $this->error, ['query' => $this->stmt->queryString]);
             if (DEBUG_MODE) {
                 echo 'Query Error: ' . $this->error;
             }

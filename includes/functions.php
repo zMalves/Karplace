@@ -81,6 +81,18 @@ function formatMoney($value) {
 }
 
 /**
+ * Limpa valor monetário para inserção no banco
+ * @param string $value Valor formatado
+ * @return float Valor limpo
+ */
+function cleanMoney($value) {
+    // Remove R$, espaços, pontos e substitui vírgula por ponto
+    $clean = str_replace(['R$', ' ', '.'], '', $value);
+    $clean = str_replace(',', '.', $clean);
+    return (float) $clean;
+}
+
+/**
  * Formata uma data
  * @param string $date Data a ser formatada
  * @param string $format Formato desejado
@@ -357,24 +369,32 @@ function isValidImage($file) {
  * @return mixed Nome do arquivo ou false
  */
 function uploadImage($file, $destination) {
-    // Verifica se é uma imagem válida
-    if (!isValidImage($file)) {
+    try {
+        // Verifica se é uma imagem válida
+        if (!isValidImage($file)) {
+            Logger::warning('Upload falhou: imagem inválida', ['file' => $file['name']]);
+            return false;
+        }
+        
+        // Cria o diretório se não existir
+        if (!file_exists($destination)) {
+            mkdir($destination, 0755, true);
+        }
+        
+        // Gera um nome único
+        $filename = generateUniqueFilename($file['name']);
+        $filepath = $destination . '/' . $filename;
+        
+        // Move o arquivo
+        if (move_uploaded_file($file['tmp_name'], $filepath)) {
+            Logger::info('Upload realizado com sucesso', ['file' => $filename]);
+            return $filename;
+        }
+        
+        Logger::error('Falha ao mover arquivo uploadado', ['destination' => $filepath]);
+        return false;
+    } catch (Exception $e) {
+        Logger::exception($e);
         return false;
     }
-    
-    // Cria o diretório se não existir
-    if (!file_exists($destination)) {
-        mkdir($destination, 0755, true);
-    }
-    
-    // Gera um nome único
-    $filename = generateUniqueFilename($file['name']);
-    $filepath = $destination . '/' . $filename;
-    
-    // Move o arquivo
-    if (move_uploaded_file($file['tmp_name'], $filepath)) {
-        return $filename;
-    }
-    
-    return false;
 }

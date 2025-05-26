@@ -17,8 +17,16 @@ class Vehicle {
      * @return array Lista de marcas
      */
     public function getAllBrands() {
-        $this->db->query('SELECT * FROM brands WHERE status = "active" ORDER BY name ASC');
-        return $this->db->resultSet();
+        $cache_key = 'all_brands';
+        $brands = Cache::get($cache_key);
+        
+        if ($brands === false) {
+            $this->db->query('SELECT * FROM brands WHERE status = "active" ORDER BY name ASC');
+            $brands = $this->db->resultSet();
+            Cache::set($cache_key, $brands, 3600); // Cache por 1 hora
+        }
+        
+        return $brands;
     }
     
     /**
@@ -27,9 +35,17 @@ class Vehicle {
      * @return array Lista de modelos
      */
     public function getModelsByBrand($brand_id) {
-        $this->db->query('SELECT * FROM models WHERE brand_id = :brand_id AND status = "active" ORDER BY name ASC');
-        $this->db->bind(':brand_id', $brand_id);
-        return $this->db->resultSet();
+        $cache_key = 'models_brand_' . $brand_id;
+        $models = Cache::get($cache_key);
+        
+        if ($models === false) {
+            $this->db->query('SELECT * FROM models WHERE brand_id = :brand_id AND status = "active" ORDER BY name ASC');
+            $this->db->bind(':brand_id', $brand_id);
+            $models = $this->db->resultSet();
+            Cache::set($cache_key, $models, 3600); // Cache por 1 hora
+        }
+        
+        return $models;
     }
     
     /**
