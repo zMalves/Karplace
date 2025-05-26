@@ -55,6 +55,18 @@ a:hover {
     margin: 0;
 }
 
+.logo {
+  display: inline-block;
+  vertical-align: middle;
+  height: 100%;
+}
+
+.logo img {
+  height: 5vh;
+  display: block;
+  margin: auto 0;
+}
+
 .main-nav ul li::after {
     content: '';
     position: absolute;

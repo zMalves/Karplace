@@ -6,7 +6,8 @@
         <div class="header-content">
             <div class="logo">
                 <a href="index.php">
-                    <h1><?php echo SITE_NAME; ?></h1>
+                    <!--  <h1><?php echo SITE_NAME; ?></h1> -->
+                    <img src="logo.png" alt="Logo Karplace">
                 </a>
             </div>
             
