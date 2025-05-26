@@ -12,8 +12,8 @@ define('DB_NAME', 'u150266992_karzone');
 // Configurações do site
 define('SITE_NAME', 'Karplace');
 define('SITE_URL', 'http://localhost/public_html');
-define('UPLOAD_PATH', $_SERVER['DOCUMENT_ROOT'] . '/public_html/uploads/vehicles/');
-define('UPLOAD_URL', SITE_URL . '/uploads/vehicles/');
+define('UPLOAD_PATH', $_SERVER['DOCUMENT_ROOT'] . './uploads/vehicles/');
+define('UPLOAD_URL', SITE_URL . './uploads/vehicles/');
 
 // Configurações de email
 define('EMAIL_FROM', 'contato@automarket.com.br');
