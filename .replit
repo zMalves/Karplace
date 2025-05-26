@@ -8,3 +8,6 @@ packages = ["run"]
 [[ports]]
 localPort = 5000
 externalPort = 80
+
+[deployment]
+run = ["sh", "-c", "php -S 0.0.0.0:5000 -t public_html"]
