@@ -11,22 +11,22 @@ define('DB_NAME', 'u150266992_karzone');
 
 // Configurações do site
 define('SITE_NAME', 'Karplace');
-define('SITE_URL', 'http://localhost/public_html');
-define('UPLOAD_PATH', $_SERVER['DOCUMENT_ROOT'] . './uploads/vehicles/');
-define('UPLOAD_URL', SITE_URL . './uploads/vehicles/');
+define('SITE_URL', 'http://0.0.0.0:5000'); // Use 0.0.0.0 para acessibilidade externa
+define('UPLOAD_PATH', $_SERVER['DOCUMENT_ROOT'] . '/uploads/vehicles/');
+define('UPLOAD_URL', SITE_URL . '/uploads/vehicles/');
 
 // Configurações de email
 define('EMAIL_FROM', 'contato@automarket.com.br');
 define('EMAIL_NAME', 'AutoMarket');
 
 // Configurações de sessão
-define('SESSION_NAME', 'automarket_session');
+define('SESSION_NAME', 'karplace_session');
 define('SESSION_LIFETIME', 86400); // 24 horas
 
 // Configurações de segurança
 define('HASH_COST', 10); // Custo do bcrypt
 
-// Configurações de paginação
+// Configurações de páginação
 define('ITEMS_PER_PAGE', 12);
 
 // Configurações de debug
@@ -46,9 +46,8 @@ require_once __DIR__ . '/validation.php';
 require_once __DIR__ . '/logger.php';
 require_once __DIR__ . '/cache.php';
 
-// Inicializar logger
-Logger::init();
+// Inicialização da sessão ANTES de qualquer saída
+session_name(SESSION_NAME); // Deve ser chamado antes de qualquer saída
+session_start(); // Deve ser chamado APÓS a inclusão das classes
 
-// Inicialização da sessão
-session_name(SESSION_NAME);
-session_start();
+Logger::init(); // Inicializa o logger
