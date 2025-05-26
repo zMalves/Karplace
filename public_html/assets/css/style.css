@@ -55,18 +55,48 @@ a:hover {
     margin: 0;
 }
 
+.main-nav ul li::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    /* Começa a partir da esquerda */
+    bottom: 0;
+    width: 100%;
+    /* Largura total */
+    height: 3px;
+    /* Altura da barra */
+    background-color: #E60000;
+    /* Cor da barra */
+    transform: scaleX(0);
+    /* Começa invisível */
+    transition: transform 0.3s ease;
+    /* Animação suave */
+}
+
+.main-nav ul li:hover::after {
+    transform: scaleX(1);
+    /* A barra se expande para 100% da largura no hover */
+}
+
 .main-nav ul {
-    display: flex;
+    position: relative;
     list-style: none;
+    padding: 0;
 }
 
 .main-nav ul li {
-    margin-left: 25px;
+    display: inline-block;
+    position: relative;
+    margin-right: 20px;
+    /* Adicione espaço entre os itens */
 }
 
 .main-nav ul li a {
-    color: #4D4D4D;
-    font-weight: 500;
+    text-decoration: none;
+    color: #333;
+    /* Cor do texto */
+    padding: 10px 0;
+    /* Espaço ao redor do texto */
 }
 
 .main-nav ul li a:hover {
@@ -1160,12 +1190,12 @@ section h2 {
     .listing-content {
         flex-direction: column;
     }
-    
+
     .listing-gallery {
         margin-right: 0;
         margin-bottom: 30px;
     }
-    
+
     .main-photo {
         height: 300px;
     }
@@ -1175,32 +1205,32 @@ section h2 {
     .main-nav {
         display: none;
     }
-    
+
     .mobile-menu-toggle {
         display: block;
     }
-    
+
     .hero h1 {
         font-size: 28px;
     }
-    
+
     .search-filters {
         flex-direction: column;
     }
-    
+
     .footer-content {
         flex-direction: column;
     }
-    
+
     .listing-header {
         flex-direction: column;
     }
-    
+
     .listing-price h2 {
         text-align: left;
         margin-top: 10px;
     }
-    
+
     .calculator-form {
         flex-direction: column;
     }
@@ -1210,21 +1240,21 @@ section h2 {
     .listings-container {
         flex-direction: column;
     }
-    
+
     .filters-sidebar {
         max-width: 100%;
         position: static;
     }
-    
+
     .main-photo {
         height: 250px;
     }
-    
+
     .results-header {
         flex-direction: column;
         align-items: flex-start;
     }
-    
+
     .results-sort {
         margin-top: 10px;
     }

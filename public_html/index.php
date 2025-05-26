@@ -108,9 +108,11 @@ $brands = $vehicleObj->getAllBrands();
                                     <?php else: ?>
                                         <div class="no-image">Sem imagem</div>
                                     <?php endif; ?>
-                                    
-                                    <?php if ($listing['verified']): ?>
+
+                                    <?php if (isset($listing['verified']) && $listing['verified']): ?>
                                         <span class="badge verified">Vistoriado</span>
+                                    <?php else: ?>
+                                        <!-- Caso não esteja verificado, você pode deixar vazio ou adicionar uma mensagem -->
                                     <?php endif; ?>
                                 </div>
                                 
