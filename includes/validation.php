@@ -1,4 +1,3 @@
-
 <?php
 /**
  * Classe para validação de dados
