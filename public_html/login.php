@@ -23,19 +23,19 @@ if (isPostRequest()) {
     } else {
         // Obtém os dados do formulário
         $email = trim($_POST['email'] ?? '');
-        $password = $_POST['password'] ?? '';
-        
+        $password = trim($_POST['password'] ?? '');
+
         // Valida os dados
         if (empty($email)) {
             $errors[] = 'O e-mail é obrigatório.';
         } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
             $errors[] = 'O e-mail informado é inválido.';
         }
-        
+
         if (empty($password)) {
             $errors[] = 'A senha é obrigatória.';
         }
-        
+
         // Se não houver erros, tenta fazer login
         if (empty($errors)) {
             $userObj = new User();
@@ -47,13 +47,13 @@ if (isPostRequest()) {
                 $_SESSION['user_name'] = $user['name'];
                 $_SESSION['user_email'] = $user['email'];
                 $_SESSION['user_type'] = $user['user_type'];
-                
+
                 // Redireciona para a página solicitada ou para a home
                 $redirect = isset($_GET['redirect']) ? $_GET['redirect'] : 'index.php';
                 $_SESSION['success'] = 'Login realizado com sucesso!';
                 redirect($redirect);
             } else {
-                $errors[] = 'E-mail ou senha incorretos.';
+                $errors[] = 'E-mail ou senha inválidos.';
             }
         }
     }
@@ -97,14 +97,14 @@ if (isPostRequest()) {
                         
                         <div class="form-group">
                             <label for="email">E-mail</label>
-                            <input type="email" id="email" name="email" value="<?php echo sanitizeHTML($email); ?>" required>
+                            <input type="email" id="email" name="email" value="<?php echo sanitize($email); ?>" required>
                         </div>
                         
                         <div class="form-group">
                             <label for="password">Senha</label>
                             <input type="password" id="password" name="password" required>
                         </div>
-                        
+
                         <div class="form-group">
                             <button type="submit" class="btn btn-primary btn-block">Entrar</button>
                         </div>
@@ -121,7 +121,5 @@ if (isPostRequest()) {
     </main>
 
     <?php include_once '../includes/footer.php'; ?>
-
-    <script src="assets/js/main.js"></script>
 </body>
 </html>

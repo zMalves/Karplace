@@ -2,7 +2,6 @@
 /**
  * Funções auxiliares do sistema
  */
-
 /**
  * Verifica se o usuário está logado
  * @return boolean
@@ -10,7 +9,6 @@
 function isLoggedIn() {
     return isset($_SESSION['user_id']) && !empty($_SESSION['user_id']);
 }
-
 /**
  * Obtém o ID do usuário logado
  * @return int|null
@@ -18,7 +16,6 @@ function isLoggedIn() {
 function getUserId() {
     return isLoggedIn() ? $_SESSION['user_id'] : null;
 }
-
 /**
  * Verifica se o usuário é administrador
  * @return boolean
@@ -26,7 +23,20 @@ function getUserId() {
 function isAdmin() {
     return isLoggedIn() && isset($_SESSION['user_type']) && $_SESSION['user_type'] === 'admin';
 }
-
+/**
+ * Verifica se a requisição é do tipo POST
+ * @return boolean
+ */
+function isPostRequest() {
+    return $_SERVER['REQUEST_METHOD'] === 'POST';
+}
+/**
+ * Gera um campo de formulário com um token CSRF
+ * @return string Campo de entrada HTML
+ */
+function csrfField() {
+    return '<input type="hidden" name="csrf_token" value="' . generateCSRFToken() . '">';
+}
 /**
  * Redireciona para uma página
  * @param string $url URL de destino

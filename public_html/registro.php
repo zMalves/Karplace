@@ -132,17 +132,17 @@ if (isPostRequest()) {
                         
                         <div class="form-group">
                             <label for="name">Nome completo</label>
-                            <input type="text" id="name" name="name" value="<?php echo sanitizeHTML($name); ?>" required>
+                            <input type="text" id="name" name="name" value="<?php echo sanitize($name); ?>" required>
                         </div>
                         
                         <div class="form-group">
                             <label for="email">E-mail</label>
-                            <input type="email" id="email" name="email" value="<?php echo sanitizeHTML($email); ?>" required>
+                            <input type="email" id="email" name="email" value="<?php echo sanitize($email); ?>" required>
                         </div>
                         
                         <div class="form-group">
                             <label for="phone">Telefone</label>
-                            <input type="tel" id="phone" name="phone" value="<?php echo sanitizeHTML($phone); ?>" placeholder="(00) 00000-0000">
+                            <input type="tel" id="phone" name="phone" value="<?php echo sanitize($phone); ?>" placeholder="(00) 00000-0000">
                         </div>
                         
                         <div class="form-group">

@@ -2,17 +2,10 @@
 // Se ainda não estiver incluído
 if (!defined('HEADER_INCLUDED')) {
     define('HEADER_INCLUDED', true);
-
     // Inclui dependências necessárias
-    if (!class_exists('Database')) {
-        require_once __DIR__ . '/../classes/Database.php';
-    }
-    if (!class_exists('Vehicle')) {
-        require_once __DIR__ . '/../classes/Vehicle.php';
-    }
-    if (!class_exists('User')) {
-        require_once __DIR__ . '/../classes/User.php';
-    }
+    require_once __DIR__ . '/../classes/Database.php';
+    require_once __DIR__ . '/../classes/Vehicle.php';  // Mude aqui para require_once
+    require_once __DIR__ . '/../classes/User.php';
 
     // Se não estiver logado e tentar acessar área restrita
     $restricted_pages = ['anunciar.php', 'perfil.php', 'meus-anuncios.php'];
@@ -38,7 +31,7 @@ if (!defined('HEADER_INCLUDED')) {
                 <ul>
                     <li><a href="index.php">Home</a></li>
                     <li><a href="anuncios.php">Veículos</a></li>
-                    <li><a href="vender.php">Vender</a></li>
+                    <li><a href="anunciar.php">Vender</a></li>
                     <li><a href="financiamento.php">Financiamento</a></li>
                     <li><a href="sobre.php">Sobre</a></li>
                 </ul>

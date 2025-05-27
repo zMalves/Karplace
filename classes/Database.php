@@ -1,4 +1,3 @@
-
 <?php
 /**
  * Classe Database para gerenciamento de conexão e operações com o banco de dados
