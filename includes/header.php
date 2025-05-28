@@ -32,8 +32,8 @@ if (!defined('HEADER_INCLUDED')) {
                     <li><a href="index.php">Home</a></li>
                     <li><a href="anuncios.php">Veículos</a></li>
                     <li><a href="anunciar.php">Vender</a></li>
-                    <li><a href="financiamento.php">Financiamento</a></li>
-                    <li><a href="sobre.php">Sobre</a></li>
+                    <li><a href="#?off">Financiamento</a></li>
+                    <li><a href="#?off">Sobre</a></li>
                 </ul>
             </nav>
 

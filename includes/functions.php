@@ -41,9 +41,15 @@ function csrfField() {
  * Redireciona para uma página
  * @param string $url URL de destino
  */
-function redirect($url) {
-    header("Location: $url");
-    exit();
+function redirect(string $url): void
+{
+    // descarta TODO o conteúdo já armazenado no(s) buffer(es)
+    while (ob_get_level() > 0) {
+        ob_end_clean();
+    }
+
+    header("Location: {$url}");
+    exit;
 }
 
 /**
@@ -231,4 +237,18 @@ function formatFileSize($bytes) {
     }
 
     return round($bytes, 2) . ' ' . $units[$i];
+}
+
+// ---- Notificações  -----//
+define('FLASH_SUCCESS', 'success');
+define('FLASH_ERROR',   'error');
+define('FLASH_WARNING', 'warning');
+define('FLASH_INFO',    'info');
+
+function flash(string $message, string $type = FLASH_SUCCESS): void
+{
+    $_SESSION['flash'] = [
+        'message' => $message,
+        'type'    => $type,
+    ];
 }

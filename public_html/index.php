@@ -8,6 +8,7 @@ require_once '../classes/Database.php';
 require_once '../classes/User.php';
 require_once '../classes/Vehicle.php';
 require_once '../classes/Listing.php';
+require_once '../includes/notifications.php';
 
 // Inicializa as classes
 $vehicleObj = new Vehicle();

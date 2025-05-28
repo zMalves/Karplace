@@ -4,6 +4,8 @@ require_once '../includes/config.php';
 require_once '../includes/functions.php';
 require_once '../classes/Database.php';
 require_once '../classes/User.php';
+require_once '../includes/notifications.php';
+
 
 // Verifica se o usuário já está logado
 if (isLoggedIn()) {
@@ -88,9 +90,7 @@ if (isPostRequest()) {
                             </ul>
                         </div>
                     <?php endif; ?>
-                    
-                    <?php echo flashMessage('success'); ?>
-                    <?php echo flashMessage('error'); ?>
+            
                     
                     <form action="login.php<?php echo isset($_GET['redirect']) ? '?redirect=' . urlencode($_GET['redirect']) : ''; ?>" method="POST" class="auth-form">
                         <?php echo csrfField(); ?>
